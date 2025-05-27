@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Restaurant.Database.Context;
+using Restaurant.Database.Dtos;
 using Restaurant.Database.Entities;
+using Restaurant.Database.QueryExtensions;
 namespace Restaurant.Database.Repositories
 {
     public class OrdersRepository : BaseRepository<Order>
@@ -28,6 +30,24 @@ namespace Restaurant.Database.Repositories
 
                 //.AsNoTracking()
                 .ToListAsync();
+
+            return results;
+        }
+
+        public async Task<List<Order>> GetFilteredAsync(OrdersFilteringDto filters, OrderSortingDto sortingOption)
+        {
+            var results = await restaurantDatabaseContext.Orders
+            .Where(e => e.DeletedAt == null)
+            .FilterByOrderStartDate(filters.DateRange)
+            .SearchBy(filters.SearchValue)
+
+            .SortBy(sortingOption)
+
+            .Skip(filters.Skip)
+            .Take(filters.Take)
+
+            .AsNoTracking()
+            .ToListAsync();
 
             return results;
         }
