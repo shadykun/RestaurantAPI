@@ -1,5 +1,6 @@
 ﻿using Restaurant.Database.Entities;
 using Restaurant.Core.Dtos.Requests.Order;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Restaurant.Core.Mapping
 {
@@ -16,3 +17,4 @@ namespace Restaurant.Core.Mapping
         }
     }
 }
+

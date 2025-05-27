@@ -16,6 +16,13 @@ namespace Restaurant.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("get-filtered-orders")]
+        public async Task<IActionResult> GetFilteredOrders(GetFilteredOrdersRequest payload)
+        {
+            var results = await ordersService.GetOrdersAsync(payload);
+            return Ok(results);
+        }
+
         [HttpPost("add-order")]
         public async Task<IActionResult> AddOrder([FromBody] AddOrderRequest payload)
         {
@@ -26,7 +33,7 @@ namespace Restaurant.API.Controllers
         [HttpGet("get-orders")]
         public async Task<IActionResult> GetOrders()
         {
-            var result = await ordersService.GetOrdersAsync();
+            var result = await ordersService.GetOrdersAsync(null);
             return Ok(result);
         }
     }

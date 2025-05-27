@@ -3,6 +3,7 @@ using Restaurant.Core.Dtos.Requests.Order;
 using Restaurant.Core.Mapping;
 using Restaurant.Core.Dtos.Common.Order;
 using Restaurant.Core.Dtos.Responses.Order;
+using Restaurant.Database.Entities;
 
 namespace Restaurant.Core.Services
 {
@@ -26,13 +27,17 @@ namespace Restaurant.Core.Services
             await ordersRepository.AddAsync(newOrder);
         }
 
-        public async Task<GetOrdersResponse> GetOrdersAsync()
+        public async Task<GetOrdersResponse> GetOrdersAsync(GetFilteredOrdersRequest? payload)
         {
-            var events = await ordersRepository.GetAllAsync();
+            List<Order> orders;
+            if(payload != null)
+                orders = await ordersRepository.GetFilteredAsync(payload.Filters, payload.SortingOptions);
+            else
+                orders = await ordersRepository.GetAllAsync();
 
             var result = new GetOrdersResponse
             {
-                Orders = events.Select(e => new OrderDto
+                Orders = orders.Select(e => new OrderDto
                 {
                     Id = e.Id,
                     OrderDate = e.OrderDate,
